@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Chapaev</class>
- <widget class="QWidget" name="Chapaev">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -117,7 +117,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="pushButton_1">
        <property name="minimumSize">
         <size>
          <width>361</width>
@@ -125,7 +125,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Single Player</string>
+        <string>SinglePlayer</string>
        </property>
       </widget>
      </item>
@@ -168,7 +168,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Multi Player</string>
+        <string>MultiPlayer</string>
        </property>
       </widget>
      </item>
@@ -354,14 +354,17 @@
          <property name="minimumSize">
           <size>
            <width>200</width>
-           <height>30</height>
+           <height>25</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
            <width>200</width>
-           <height>30</height>
+           <height>25</height>
           </size>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -371,12 +374,12 @@
    </item>
   </layout>
   <zorder>label</zorder>
-  <zorder>pushButton</zorder>
+  <zorder>pushButton_1</zorder>
   <zorder>horizontalSpacer</zorder>
   <zorder>horizontalSpacer_2</zorder>
   <zorder>horizontalSpacer_3</zorder>
   <zorder>horizontalSpacer_4</zorder>
-  <zorder>pushButton</zorder>
+  <zorder>pushButton_1</zorder>
   <zorder>horizontalSpacer</zorder>
   <zorder>horizontalSpacer_2</zorder>
   <zorder>layoutWidget</zorder>
