@@ -30,7 +30,7 @@ def quit_push():
 
 
 chapaev = QtWidgets.QApplication(sys.argv)
-main_window = uic.loadUi('fe_main_window.ui')
+main_window = uic.loadUi('main_window/fe_main_window.ui')
 main_window.show()
 
 main_window.pushButton_1.clicked.connect(single_player_push)

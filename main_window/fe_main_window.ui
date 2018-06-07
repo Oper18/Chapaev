@@ -69,7 +69,7 @@
         </size>
        </property>
        <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;logo.jpg&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;main_window\logo.jpg&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>
@@ -373,23 +373,6 @@
     </layout>
    </item>
   </layout>
-  <zorder>label</zorder>
-  <zorder>pushButton_1</zorder>
-  <zorder>horizontalSpacer</zorder>
-  <zorder>horizontalSpacer_2</zorder>
-  <zorder>horizontalSpacer_3</zorder>
-  <zorder>horizontalSpacer_4</zorder>
-  <zorder>pushButton_1</zorder>
-  <zorder>horizontalSpacer</zorder>
-  <zorder>horizontalSpacer_2</zorder>
-  <zorder>layoutWidget</zorder>
-  <zorder>layoutWidget_2</zorder>
-  <zorder>layoutWidget_3</zorder>
-  <zorder>layoutWidget_4</zorder>
-  <zorder>pushButton_3</zorder>
-  <zorder>textBrowser</zorder>
-  <zorder>horizontalSpacer_13</zorder>
-  <zorder>verticalSpacer</zorder>
   <zorder>verticalSpacer_2</zorder>
   <zorder>verticalSpacer_3</zorder>
  </widget>
