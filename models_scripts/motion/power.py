@@ -3,18 +3,22 @@ import time
 
 push = False
 alpha = 0
+power = 0
+state = False
 
 def Motion():
+    global power, state
+    
     controller = bge.logic.getCurrentController()
     
     motion = False
-    xcoord = 0.01
-
+    xcoord = power
+    print(power)
     actuator = controller.actuators["Motion"] # the name of the Action actuator
 
     if controller.sensors["Keyboard"].positive: # trigger when buton pressed
         motion = True
-    
+
     if motion is True:
         #print("True")
         actuator.dLoc = [xcoord, 0, 0]
@@ -27,6 +31,8 @@ def Motion():
         actuator.dLoc = [0, 0, 0]
         controller.activate(actuator)
         controller.deactivate(actuator)
+        power = 0
+        state = False
 
 def RotationArch():
     global push, alpha
@@ -58,5 +64,29 @@ def RotationArch():
         
     elif controller.sensors["Always"].status == 3:
         actuator.dRot = [0, 0, 0]
+        controller.activate(actuator)
+        controller.deactivate(actuator)
+        
+def Power():
+    global power, state
+    
+    controller = bge.logic.getCurrentController()
+    
+    actuator = controller.actuators["Motion"]
+    
+    if controller.sensors["Power"].positive:
+        state = True
+        
+    if state is True:
+        power = power + 0.01
+        if power >= 1.8:
+            actuator.dLoc = [power, 0, 0]
+            controller.activate(actuator)
+            controller.deactivate(actuator)
+            power = 0
+            state = False
+    
+    elif state is False:
+        actuator.dLoc = [0, 0, 0]
         controller.activate(actuator)
         controller.deactivate(actuator)
