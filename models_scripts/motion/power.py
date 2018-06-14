@@ -13,14 +13,14 @@ def Motion():
         motion = True
     
     if motion is True:
-        print("True")
+        #print("True")
         actuator.dLoc = [xcoord, 0, 0]
         controller.activate(actuator)
         controller.deactivate(actuator)
         motion = False
         
     else:
-        print("False")
+        #print("False")
         actuator.dLoc = [0, 0, 0]
         controller.activate(actuator)
         controller.deactivate(actuator)
