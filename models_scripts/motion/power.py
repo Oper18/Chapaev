@@ -4,35 +4,23 @@ import time
 push = False
 alpha = 0
 power = 0
-state = False
+state = 0
 
 def Motion():
-    global power, state
+    global power
     
     controller = bge.logic.getCurrentController()
+
+    point = controller.owner.worldPosition
     
     motion = False
     xcoord = power
-    print(power)
+
     actuator = controller.actuators["Motion"] # the name of the Action actuator
 
     if controller.sensors["Keyboard"].positive: # trigger when buton pressed
+        controller.owner.applyImpulse(point, [0.5, 0, 0], False)
         motion = True
-
-    if motion is True:
-        #print("True")
-        actuator.dLoc = [xcoord, 0, 0]
-        controller.activate(actuator)
-        controller.deactivate(actuator)
-        motion = False
-        
-    else:
-        #print("False")
-        actuator.dLoc = [0, 0, 0]
-        controller.activate(actuator)
-        controller.deactivate(actuator)
-        power = 0
-        state = False
 
 def RotationArch():
     global push, alpha
@@ -68,25 +56,24 @@ def RotationArch():
         controller.deactivate(actuator)
         
 def Power():
-    global power, state
+    global power, state, iter
     
     controller = bge.logic.getCurrentController()
     
     actuator = controller.actuators["Motion"]
     
+    point = controller.owner.worldPosition
+    
     if controller.sensors["Power"].positive:
-        state = True
+        state = state + 1
         
-    if state is True:
+    if state == 1:
         power = power + 0.01
         if power >= 1.8:
-            actuator.dLoc = [power, 0, 0]
-            controller.activate(actuator)
-            controller.deactivate(actuator)
+            controller.owner.applyImpulse(point, [power, 0, 0], False)
             power = 0
-            state = False
+            state = 0
     
-    elif state is False:
-        actuator.dLoc = [0, 0, 0]
-        controller.activate(actuator)
-        controller.deactivate(actuator)
+    elif state == 2:
+        controller.owner.applyImpulse(point, [power, 0, 0], False)
+        state = 0
