@@ -89,7 +89,7 @@ def CountCoords(alpha):
     x = 1
     y = 0
 
-    alpha = math.radians(alpha * (180 / 62))
+    alpha = math.radians(alpha * (180 / 63.5))
 
     XDelta = x * math.cos(alpha) - y * math.sin(alpha)
     YDelta = x * math.sin(alpha) + y * math.cos(alpha)
