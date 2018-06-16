@@ -1,10 +1,12 @@
 import bge
 import time
+import math
 
 push = False
 alpha = 0
 power = 0
 state = 0
+delta = ()
 
 def Motion():
     global power
@@ -23,7 +25,7 @@ def Motion():
         motion = True
 
 def RotationArch():
-    global push, alpha
+    global push, alpha, delta
     
     alpha = alpha + 1
     
@@ -51,6 +53,7 @@ def RotationArch():
         controller.deactivate(actuator)
         
     elif controller.sensors["Always"].status == 3:
+        delta = CountCoords(alpha)
         actuator.dRot = [0, 0, 0]
         controller.activate(actuator)
         controller.deactivate(actuator)
@@ -70,10 +73,28 @@ def Power():
     if state == 1:
         power = power + 0.01
         if power >= 1.8:
-            controller.owner.applyImpulse(point, [power, 0, 0], False)
+            xpower = delta[0] * power
+            ypower = delta[1] * power
+            print(xpower)
+            print(ypower)
+            controller.owner.applyImpulse(point, [xpower, ypower, 0], False)
             power = 0
             state = 0
     
     elif state == 2:
         controller.owner.applyImpulse(point, [power, 0, 0], False)
         state = 0
+        
+def CountCoords(alpha):
+    x = 1
+    y = 0
+
+    alpha = math.radians(alpha * (180 / 62))
+
+    XDelta = x * math.cos(alpha) - y * math.sin(alpha)
+    YDelta = x * math.sin(alpha) + y * math.cos(alpha)
+    
+    print("x = ", XDelta)
+    print("y = ", YDelta)
+    
+    return (XDelta, YDelta)
