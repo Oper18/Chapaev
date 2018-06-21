@@ -1,4 +1,5 @@
 import bge
+import bpy
 import time
 import math
 
@@ -7,6 +8,7 @@ alpha = 0
 power = 0
 state = 0
 delta = ()
+meshArrow = str()
 
 def Motion():
     global power
@@ -25,11 +27,12 @@ def Motion():
         motion = True
 
 def RotationArch():
-    global push, alpha, delta
+    global push, alpha, delta, meshArrow
     
     alpha = alpha + 1
     
     controller = bge.logic.getCurrentController()
+    meshArrow = controller.owner.meshes[0]
     
     if controller.sensors["Keyboard"].positive:
         push = True
@@ -70,9 +73,11 @@ def Power():
     if controller.sensors["Power"].positive:
         state = state + 1
         
+    # 39 faces on the arrow
     if state == 1:
         power = power + 0.01
-        if power >= 1.8:
+        ChangeColor(power)
+        if power >= 1.9:
             xpower = delta[0] * power
             ypower = delta[1] * power
             print(xpower)
@@ -82,7 +87,12 @@ def Power():
             state = 0
     
     elif state == 2:
-        controller.owner.applyImpulse(point, [power, 0, 0], False)
+        xpower = delta[0] * power
+        ypower = delta[1] * power
+        print(xpower)
+        print(ypower)
+        controller.owner.applyImpulse(point, [xpower, ypower, 0], False)
+        power = 0
         state = 0
         
 def CountCoords(alpha):
@@ -98,3 +108,11 @@ def CountCoords(alpha):
     print("y = ", YDelta)
     
     return (XDelta, YDelta)
+
+def ChangeColor(power):
+    global meshArrow
+    
+    meshArrow.getVertex(1,0).color = [1, 1, 1, 1]
+    meshArrow.getVertex(1,1).color = [1, 1, 1, 1]
+    meshArrow.getVertex(1,2).color = [1, 1, 1, 1]
+    meshArrow.getVertex(1,3).color = [1, 1, 1, 1]
