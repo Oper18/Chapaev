@@ -9,6 +9,10 @@ power = 0
 state = 0
 delta = ()
 meshArrow = str()
+verts = 38
+color = 0
+red = 0
+green = 80
 
 def Motion():
     global power
@@ -62,7 +66,7 @@ def RotationArch():
         controller.deactivate(actuator)
         
 def Power():
-    global power, state, iter
+    global power, state, iter, color
     
     controller = bge.logic.getCurrentController()
     
@@ -76,7 +80,9 @@ def Power():
     # 39 faces on the arrow
     if state == 1:
         power = power + 0.01
-        ChangeColor(power)
+        color = color + 1
+        ChangeColor(color)
+        
         if power >= 1.9:
             xpower = delta[0] * power
             ypower = delta[1] * power
@@ -109,10 +115,42 @@ def CountCoords(alpha):
     
     return (XDelta, YDelta)
 
-def ChangeColor(power):
-    global meshArrow
+def ChangeColor(color):
+    global meshArrow, verts
     
-    meshArrow.getVertex(1,0).color = [1, 1, 1, 1]
-    meshArrow.getVertex(1,1).color = [1, 1, 1, 1]
-    meshArrow.getVertex(1,2).color = [1, 1, 1, 1]
-    meshArrow.getVertex(1,3).color = [1, 1, 1, 1]
+    if color % 5 == 0:
+        verts = verts - 1
+        SetColor()
+        print(red/10)
+        print(green/10)
+    
+    if verts == 1:
+        meshArrow.getVertex(verts,0).color = [red/100, green/100, 0, 1]
+        meshArrow.getVertex(verts,1).color = [red/100, green/100, 0, 1]
+        meshArrow.getVertex(verts,2).color = [red/100, green/100, 0, 1]
+        #meshArrow.getVertex(verts,3).color = [1, 1, 1, 1]
+        
+    elif verts == 17:
+        meshArrow.getVertex(verts,0).color = [red/100, green/100, 0, 1]
+        meshArrow.getVertex(verts,1).color = [red/100, green/100, 0, 1]
+        meshArrow.getVertex(verts,2).color = [red/100, green/100, 0, 1]
+        meshArrow.getVertex(verts,3).color = [red/100, green/100, 0, 1]
+        meshArrow.getVertex(verts,4).color = [red/100, green/100, 0, 1]
+        meshArrow.getVertex(verts,5).color = [red/100, green/100, 0, 1]
+        meshArrow.getVertex(verts,6).color = [red/100, green/100, 0, 1]
+        meshArrow.getVertex(verts,7).color = [red/100, green/100, 0, 1]
+            
+    else:
+        meshArrow.getVertex(verts,0).color = [red/100, green/100, 0, 1]
+        meshArrow.getVertex(verts,1).color = [red/100, green/100, 0, 1]
+        meshArrow.getVertex(verts,2).color = [red/100, green/100, 0, 1]
+        meshArrow.getVertex(verts,3).color = [red/100, green/100, 0, 1]
+        
+def SetColor():
+    global red, green
+    
+    if red < 80:
+        red = red + 5
+        
+    elif red == 80 and green > 0:
+        green = green - 5
