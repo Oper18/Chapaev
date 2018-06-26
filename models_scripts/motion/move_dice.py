@@ -25,7 +25,6 @@ def rotation_angle():
     return angle
     print(dict_["current_dice"])
 
-
 def move_dice():
     angle = rotation_angle()
     dice = scene.objects[dict_["current_dice"]["dice"]]
