@@ -3,6 +3,10 @@ import bpy
 import time
 import math
 
+bge.render.showMouse(True)
+
+scene = bge.logic.getCurrentScene()
+
 push = False
 alpha = 0
 power = 0
@@ -13,22 +17,10 @@ verts = 38
 color = 0
 red = 0
 green = 80
-
-def Motion():
-    global power
-    
-    controller = bge.logic.getCurrentController()
-
-    point = controller.owner.worldPosition
-    
-    motion = False
-    xcoord = power
-
-    actuator = controller.actuators["Motion"] # the name of the Action actuator
-
-    if controller.sensors["Keyboard"].positive: # trigger when buton pressed
-        controller.owner.applyImpulse(point, [0.5, 0, 0], False)
-        motion = True
+mousePos = [0, 0, 0]
+objectPlay = [scene.objects['White_Dice_Board.000'], scene.objects['White_Dice_Board.000'].localPosition]
+diceList = {}
+diceNum = 0
 
 def RotationArch():
     global push, alpha, delta, meshArrow
@@ -72,34 +64,36 @@ def Power():
     
     actuator = controller.actuators["Motion"]
     
-    point = controller.owner.worldPosition
+    #point = controller.owner.worldPosition
+    point = objectPlay[0].worldPosition
     
-    if controller.sensors["Power"].positive:
-        state = state + 1
+    try:
+        if controller.sensors["Power"+str(diceNum)].positive:
+            state = state + 1
+    except KeyError:
+        # 39 faces on the arrow
+        if state == 1:
+            power = power + 0.01
+            color = color + 1
+            ChangeColor(color)
+            
+            if power >= 1.9:
+                xpower = delta[0] * power
+                ypower = delta[1] * power
+                print(xpower)
+                print(ypower)
+                objectPlay[0].applyImpulse(point, [xpower, ypower, 0], False)
+                power = 0
+                state = 0
         
-    # 39 faces on the arrow
-    if state == 1:
-        power = power + 0.01
-        color = color + 1
-        ChangeColor(color)
-        
-        if power >= 1.9:
+        elif state == 2:
             xpower = delta[0] * power
             ypower = delta[1] * power
             print(xpower)
             print(ypower)
-            controller.owner.applyImpulse(point, [xpower, ypower, 0], False)
+            objectPlay[0].applyImpulse(point, [xpower, ypower, 0], False)
             power = 0
             state = 0
-    
-    elif state == 2:
-        xpower = delta[0] * power
-        ypower = delta[1] * power
-        print(xpower)
-        print(ypower)
-        controller.owner.applyImpulse(point, [xpower, ypower, 0], False)
-        power = 0
-        state = 0
         
 def CountCoords(alpha):
     x = 1
@@ -110,8 +104,8 @@ def CountCoords(alpha):
     XDelta = x * math.cos(alpha) - y * math.sin(alpha)
     YDelta = x * math.sin(alpha) + y * math.cos(alpha)
     
-    print("x = ", XDelta)
-    print("y = ", YDelta)
+    #print("x = ", XDelta)
+    #print("y = ", YDelta)
     
     return (XDelta, YDelta)
 
@@ -121,8 +115,6 @@ def ChangeColor(color):
     if color % 5 == 0:
         verts = verts - 1
         SetColor()
-        print(red/10)
-        print(green/10)
     
     if verts == 1:
         meshArrow.getVertex(verts,0).color = [red/100, green/100, 0, 1]
@@ -154,3 +146,32 @@ def SetColor():
         
     elif red == 80 and green > 0:
         green = green - 5
+    
+def GetCoord():
+    global position, mousePos, diceList, objectPlay
+    
+    controller = bge.logic.getCurrentController()
+    object = controller.owner
+    diceList[object.name] = [object, object.localPosition]
+    for i in diceList.keys():
+        if i != 'Cube.001' and diceList[i][1] == diceList['Cube.001'][1]:
+            objectPlay = diceList[i]
+    
+def ChooseDice():
+    global objectPlay, diceList, diceNum
+    
+    controller = bge.logic.getCurrentController()
+    
+    if controller.sensors["Select"].positive:
+        diceNum = diceNum + 1
+
+    if diceNum == 8:
+        diceNum = 0
+        
+    diceName = 'White_Dice_Board.00' + str(diceNum)    
+    
+    #print(diceName)
+    controller = bge.logic.getCurrentController()
+    controller.owner.localPosition = diceList[diceName][1]
+    #print('state', diceList['White_Dice_Board.001'])
+    #print(objectPlay)
