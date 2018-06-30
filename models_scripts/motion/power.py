@@ -96,6 +96,7 @@ def Power():
             power = 0
             state = 0
             push = False
+            StartColor()
         
 def CountCoords(alpha):
     x = 1
@@ -187,7 +188,7 @@ def GetCoord():
         if i != 'Cube.001' and diceList[i][1] == diceList['Cube.001'][1]:
             objectPlay = diceList[i]
             
-    IsDiceInPlay(object)
+    IsDiceInPlay()
     
 def ChooseDice():
     global objectPlay, diceList, diceNum
@@ -198,22 +199,37 @@ def ChooseDice():
     if controller.sensors["Select"].positive:
         diceNum = diceNum + 1
 
-
-    if diceNum == 8:
-        diceNum = 0
-        
-    try:
-        diceName = 'White_Dice_Board.00' + str(diceNum)    
-        controller = bge.logic.getCurrentController()
-        controller.owner.localPosition = diceList[diceName][1]
-    except KeyError:
-        diceNum = diceNum + 1
-        diceName = 'White_Dice_Board.00' + str(diceNum)    
-        controller = bge.logic.getCurrentController()
-        controller.owner.localPosition = diceList[diceName][1]
+    diceOnBoard = []
     
-def IsDiceInPlay(object):
+    if diceNum == 8:
+        diceNum = min(diceOnBoard)
+    #print(diceNum)
+    for i in diceList:
+        diceOnBoard.append(int(i[-1]))
+    
+    for i in range(len(diceOnBoard)):
+        print(diceNum)
+        if diceNum in diceOnBoard:
+            break
+        else:
+            diceNum = diceNum + 1
+        
+            if diceNum == 8:
+                diceNum = min(diceOnBoard)
+    
+    diceName = 'White_Dice_Board.00' + str(diceNum)    
+    controller = bge.logic.getCurrentController()
+    controller.owner.localPosition = diceList[diceName][1]
+    
+def IsDiceInPlay():
     global diceList
     
-    if object.localPosition[-1] < 0.645:
-        diceList.pop(object.name)
+    listToRemove = []
+    
+    for i in diceList:
+        object = diceList[i][0]
+        if object.localPosition[-1] < 0.645:
+            listToRemove.append(object.name)
+            
+    for i in listToRemove:
+        diceList.pop(i)
