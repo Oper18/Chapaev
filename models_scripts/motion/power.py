@@ -32,7 +32,7 @@ def RotationArch():
         push = True
     
     actuator = controller.actuators["RotArch"]
-    #print(push)
+    
     if push is False:
         controller.sensors["Always"].usePosPulseMode = True
         z = 0.05
@@ -44,7 +44,7 @@ def RotationArch():
     # alpha = 62 is analog of 180 degrees rotation when step (z) is 0.05
         
     controller.sensors["Always"].tap = True
-    #print(controller.sensors["Always"].status)
+    
     if controller.sensors["Always"].status == 1:
         actuator.dRot = [0, 0, z]
         controller.activate(actuator)
@@ -101,13 +101,10 @@ def CountCoords(alpha):
     x = 1
     y = 0
 
-    alpha = math.radians(alpha * (180 / 63.5))
+    alpha = math.radians(alpha * (180 / 62.5))
 
     XDelta = x * math.cos(alpha) - y * math.sin(alpha)
     YDelta = x * math.sin(alpha) + y * math.cos(alpha)
-    
-    #print("x = ", XDelta)
-    #print("y = ", YDelta)
     
     return (XDelta, YDelta)
 
@@ -189,6 +186,7 @@ def GetCoord():
     for i in diceList.keys():
         if i != 'Cube.001' and diceList[i][1] == diceList['Cube.001'][1]:
             objectPlay = diceList[i]
+    print(type(diceList['White_Dice_Board.000'][1]))
     
 def ChooseDice():
     global objectPlay, diceList, diceNum
