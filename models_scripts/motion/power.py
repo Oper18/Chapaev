@@ -25,8 +25,6 @@ diceNum = 0
 def RotationArch():
     global push, alpha, delta, meshArrow
     
-    alpha = alpha + 1
-    
     controller = bge.logic.getCurrentController()
     meshArrow = controller.owner.meshes[0]
     
@@ -34,10 +32,11 @@ def RotationArch():
         push = True
     
     actuator = controller.actuators["RotArch"]
-
+    #print(push)
     if push is False:
         controller.sensors["Always"].usePosPulseMode = True
         z = 0.05
+        alpha = alpha + 1
     else:
         controller.sensors["Always"].usePosPulseMode = False
         z = 0
@@ -45,7 +44,7 @@ def RotationArch():
     # alpha = 62 is analog of 180 degrees rotation when step (z) is 0.05
         
     controller.sensors["Always"].tap = True
-    
+    #print(controller.sensors["Always"].status)
     if controller.sensors["Always"].status == 1:
         actuator.dRot = [0, 0, z]
         controller.activate(actuator)
@@ -58,7 +57,7 @@ def RotationArch():
         controller.deactivate(actuator)
         
 def Power():
-    global power, state, iter, color
+    global power, state, iter, color, push, alpha
     
     controller = bge.logic.getCurrentController()
     
@@ -85,6 +84,8 @@ def Power():
                 objectPlay[0].applyImpulse(point, [xpower, ypower, 0], False)
                 power = 0
                 state = 0
+                push = False
+                StartColor()
         
         elif state == 2:
             xpower = delta[0] * power
@@ -94,6 +95,7 @@ def Power():
             objectPlay[0].applyImpulse(point, [xpower, ypower, 0], False)
             power = 0
             state = 0
+            push = False
         
 def CountCoords(alpha):
     x = 1
@@ -109,8 +111,34 @@ def CountCoords(alpha):
     
     return (XDelta, YDelta)
 
+def StartColor():
+    global meshArrow
+    
+    for verts in range(0, 39):
+        if verts == 1:
+            meshArrow.getVertex(verts,0).color = [0.8, 0.8, 0.8, 1]
+            meshArrow.getVertex(verts,1).color = [0.8, 0.8, 0.8, 1]
+            meshArrow.getVertex(verts,2).color = [0.8, 0.8, 0.8, 1]
+            #meshArrow.getVertex(verts,3).color = [1, 1, 1, 1]
+        
+        elif verts == 17:
+            meshArrow.getVertex(verts,0).color = [0.8, 0.8, 0.8, 1]
+            meshArrow.getVertex(verts,1).color = [0.8, 0.8, 0.8, 1]
+            meshArrow.getVertex(verts,2).color = [0.8, 0.8, 0.8, 1]
+            meshArrow.getVertex(verts,3).color = [0.8, 0.8, 0.8, 1]
+            meshArrow.getVertex(verts,4).color = [0.8, 0.8, 0.8, 1]
+            meshArrow.getVertex(verts,5).color = [0.8, 0.8, 0.8, 1]
+            meshArrow.getVertex(verts,6).color = [0.8, 0.8, 0.8, 1]
+            meshArrow.getVertex(verts,7).color = [0.8, 0.8, 0.8, 1]
+                
+        else:
+            meshArrow.getVertex(verts,0).color = [0.8, 0.8, 0.8, 1]
+            meshArrow.getVertex(verts,1).color = [0.8, 0.8, 0.8, 1]
+            meshArrow.getVertex(verts,2).color = [0.8, 0.8, 0.8, 1]
+            meshArrow.getVertex(verts,3).color = [0.8, 0.8, 0.8, 1]
+
 def ChangeColor(color):
-    global meshArrow, verts
+    global meshArrow, verts, red, green
     
     if color % 5 == 0:
         verts = verts - 1
@@ -138,6 +166,11 @@ def ChangeColor(color):
         meshArrow.getVertex(verts,2).color = [red/100, green/100, 0, 1]
         meshArrow.getVertex(verts,3).color = [red/100, green/100, 0, 1]
         
+    if verts == 0:
+        verts = 38
+        red = 0
+        green = 80
+        
 def SetColor():
     global red, green
     
@@ -148,7 +181,7 @@ def SetColor():
         green = green - 5
     
 def GetCoord():
-    global position, mousePos, diceList, objectPlay
+    global position, diceList, objectPlay
     
     controller = bge.logic.getCurrentController()
     object = controller.owner
@@ -170,8 +203,5 @@ def ChooseDice():
         
     diceName = 'White_Dice_Board.00' + str(diceNum)    
     
-    #print(diceName)
     controller = bge.logic.getCurrentController()
     controller.owner.localPosition = diceList[diceName][1]
-    #print('state', diceList['White_Dice_Board.001'])
-    #print(objectPlay)
