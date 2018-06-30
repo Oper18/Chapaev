@@ -186,20 +186,34 @@ def GetCoord():
     for i in diceList.keys():
         if i != 'Cube.001' and diceList[i][1] == diceList['Cube.001'][1]:
             objectPlay = diceList[i]
-    print(type(diceList['White_Dice_Board.000'][1]))
+            
+    IsDiceInPlay(object)
     
 def ChooseDice():
     global objectPlay, diceList, diceNum
+    #print(len(diceList))
     
     controller = bge.logic.getCurrentController()
     
     if controller.sensors["Select"].positive:
         diceNum = diceNum + 1
 
+
     if diceNum == 8:
         diceNum = 0
         
-    diceName = 'White_Dice_Board.00' + str(diceNum)    
+    try:
+        diceName = 'White_Dice_Board.00' + str(diceNum)    
+        controller = bge.logic.getCurrentController()
+        controller.owner.localPosition = diceList[diceName][1]
+    except KeyError:
+        diceNum = diceNum + 1
+        diceName = 'White_Dice_Board.00' + str(diceNum)    
+        controller = bge.logic.getCurrentController()
+        controller.owner.localPosition = diceList[diceName][1]
     
-    controller = bge.logic.getCurrentController()
-    controller.owner.localPosition = diceList[diceName][1]
+def IsDiceInPlay(object):
+    global diceList
+    
+    if object.localPosition[-1] < 0.645:
+        diceList.pop(object.name)
