@@ -200,12 +200,12 @@ def ChooseDice():
         diceNum = diceNum + 1
 
     diceOnBoard = []
-    
-    if diceNum == 8:
-        diceNum = min(diceOnBoard)
     #print(diceNum)
     for i in diceList:
         diceOnBoard.append(int(i[-1]))
+    
+    if diceNum == 8:
+        diceNum = min(diceOnBoard)
     
     for i in range(len(diceOnBoard)):
         print(diceNum)
@@ -222,7 +222,7 @@ def ChooseDice():
     controller.owner.localPosition = diceList[diceName][1]
     
 def IsDiceInPlay():
-    global diceList
+    global diceList, objectPlay, diceNum
     
     listToRemove = []
     
@@ -232,4 +232,6 @@ def IsDiceInPlay():
             listToRemove.append(object.name)
             
     for i in listToRemove:
+        objectPlay = [scene.objects['White_Dice_Board.00' + str(diceNum+1)], scene.objects['White_Dice_Board.00' + str(diceNum+1)].localPosition]
+        diceList[i][0].endObject()
         diceList.pop(i)
