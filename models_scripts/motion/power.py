@@ -19,8 +19,10 @@ red = 0
 green = 80
 mousePos = [0, 0, 0]
 objectPlay = [scene.objects['White_Dice_Board.000'], scene.objects['White_Dice_Board.000'].localPosition]
+stay = objectPlay[0].getLinearVelocity()
 diceList = {}
 diceNum = 0
+gamePause = False
 
 def RotationArch():
     global push, alpha, delta, meshArrow
@@ -57,7 +59,12 @@ def RotationArch():
         controller.deactivate(actuator)
         
 def Power():
-    global power, state, iter, color, push, alpha
+    global power, state, iter, color, push, alpha, stay, gamePause
+    
+    if objectPlay[0].getLinearVelocity() != stay:
+        gamePause = True
+    elif objectPlay[0].getLinearVelocity() == stay:
+        gamePause = False
     
     controller = bge.logic.getCurrentController()
     
@@ -79,24 +86,20 @@ def Power():
             if power >= 1.9:
                 xpower = delta[0] * power
                 ypower = delta[1] * power
-                print(xpower)
-                print(ypower)
                 objectPlay[0].applyImpulse(point, [xpower, ypower, 0], False)
                 power = 0
                 state = 0
-                push = False
-                StartColor()
+                #push = False
+                #StartColor()
         
         elif state == 2:
             xpower = delta[0] * power
             ypower = delta[1] * power
-            print(xpower)
-            print(ypower)
             objectPlay[0].applyImpulse(point, [xpower, ypower, 0], False)
             power = 0
             state = 0
-            push = False
-            StartColor()
+            #push = False
+            #StartColor()
         
 def CountCoords(alpha):
     x = 1
@@ -179,7 +182,7 @@ def SetColor():
         green = green - 5
     
 def GetCoord():
-    global position, diceList, objectPlay
+    global position, diceList, objectPlay, gamePause
     
     controller = bge.logic.getCurrentController()
     object = controller.owner
@@ -187,39 +190,43 @@ def GetCoord():
     for i in diceList.keys():
         if i != 'Cube.001' and diceList[i][1] == diceList['Cube.001'][1]:
             objectPlay = diceList[i]
-            
+                
     IsDiceInPlay()
     
 def ChooseDice():
-    global objectPlay, diceList, diceNum
+    global objectPlay, diceList, diceNum, push
     #print(len(diceList))
     
-    controller = bge.logic.getCurrentController()
+    if gamePause is False:
+        push = False
+        StartColor()
     
-    if controller.sensors["Select"].positive:
-        diceNum = diceNum + 1
-
-    diceOnBoard = []
-    #print(diceNum)
-    for i in diceList:
-        diceOnBoard.append(int(i[-1]))
-    
-    if diceNum == 8:
-        diceNum = min(diceOnBoard)
-    
-    for i in range(len(diceOnBoard)):
-        print(diceNum)
-        if diceNum in diceOnBoard:
-            break
-        else:
-            diceNum = diceNum + 1
+        controller = bge.logic.getCurrentController()
         
-            if diceNum == 8:
-                diceNum = min(diceOnBoard)
-    
-    diceName = 'White_Dice_Board.00' + str(diceNum)    
-    controller = bge.logic.getCurrentController()
-    controller.owner.localPosition = diceList[diceName][1]
+        if controller.sensors["Select"].positive:
+            diceNum = diceNum + 1
+
+        diceOnBoard = []
+        #print(diceNum)
+        for i in diceList:
+            diceOnBoard.append(int(i[-1]))
+        
+        if diceNum == 8:
+            diceNum = min(diceOnBoard)
+        
+        for i in range(len(diceOnBoard)):
+            #print(diceNum)
+            if diceNum in diceOnBoard:
+                break
+            else:
+                diceNum = diceNum + 1
+            
+                if diceNum == 8:
+                    diceNum = min(diceOnBoard)
+        
+        diceName = 'White_Dice_Board.00' + str(diceNum)    
+        controller = bge.logic.getCurrentController()
+        controller.owner.localPosition = diceList[diceName][1]
     
 def IsDiceInPlay():
     global diceList, objectPlay, diceNum
