@@ -2,6 +2,29 @@ import bge
 import bpy
 import time
 import math
+import os
+import sys
+
+#-----------------------------------------
+
+modulePath = os.path.dirname(__file__)
+modulePath = modulePath.split('/')
+modulePath.pop(-1)
+modulePath.pop(-1)
+modulePathReal = str()
+
+for i in range(len(modulePath)):
+    if i != 0:
+        modulePathReal = modulePathReal + '/' + modulePath[i]
+    else:
+        continue
+    
+modulePathReal = modulePathReal + '/models_scripts/motion'
+sys.path.append(modulePathReal)
+
+import AI
+
+#-----------------------------------------------
 
 bge.render.showMouse(True)
 
@@ -229,7 +252,7 @@ def ChooseDice():
         controller.owner.localPosition = diceList[diceName][1]
     
 def IsDiceInPlay():
-    global diceList, objectPlay, diceNum
+    global diceList, objectPlay, diceNum, scene
     
     listToRemove = []
     
@@ -242,3 +265,10 @@ def IsDiceInPlay():
         objectPlay = [scene.objects['White_Dice_Board.00' + str(diceNum+1)], scene.objects['White_Dice_Board.00' + str(diceNum+1)].localPosition]
         diceList[i][0].endObject()
         diceList.pop(i)
+        
+    objects = scene.objects    
+    
+    if len(listToRemove) > 0:
+        AI.ChooseListObjects()
+        #pass
+        #There will be way to script that control black dices.
