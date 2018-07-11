@@ -106,4 +106,4 @@ venv.bak/
 #Blender
 
 *.blend1
-*.blend
+#*.blend
